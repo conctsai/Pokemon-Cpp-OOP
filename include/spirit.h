@@ -3,25 +3,22 @@
 #include "description.h"
 #include "level.h"
 #include "property.h"
+#include "utils.h"
+#include "skill.h"
 
-class Spirit : public Description, public Level, public Property
+class Spirit : public Description, public Level, public Property, public SkillManager
 {
 public:
     Spirit(const std::string &name,
            const std::string &description,
-           const int &level,
-           const int &exp,
            const int &hp,
            const int &attackPower,
            const int &defensePower,
-           const int &speed) : Description(name, description), Level(level, exp), Property(hp, attackPower, defensePower, speed){};
-    Spirit(const std::string &name,
-           const std::string &description,
-           const int &hp,
-           const int &attackPower,
-           const int &defensePower,
-           const int &speed) : Description(name, description), Property(hp, attackPower, defensePower, speed){};
+           const int &speed,
+           const int &level = 1,
+           const int &exp = 0) : Description(name, description), Level(level, exp), Property(hp, attackPower, defensePower, speed){};
     std::string format() const noexcept;
+    virtual void addExp(int exp) noexcept override;
     virtual ~Spirit() override = default;
 };
 
@@ -30,20 +27,14 @@ class PowerSpirit : public Spirit
 public:
     PowerSpirit(const std::string &name,
                 const std::string &description,
-                const int &level,
-                const int &exp,
                 const int &hp,
                 const int &attackPower,
                 const int &defensePower,
-                const int &speed) : Spirit(name, description, level, exp, hp, attackPower, defensePower, speed){};
-    PowerSpirit(const std::string &name,
-                const std::string &description,
-                const int &hp,
-                const int &attackPower,
-                const int &defensePower,
-                const int &speed) : Spirit(name, description, hp, attackPower, defensePower, speed){};
+                const int &speed,
+                const int &level = 1,
+                const int &exp = 0) : Spirit(name, description, hp, attackPower, defensePower, speed, level, exp){};
     virtual ~PowerSpirit() override = default;
-    virtual bool addExp(int exp) noexcept override;
+    virtual void levelUp() noexcept override;
 };
 
 class Primeape : public PowerSpirit
@@ -54,34 +45,11 @@ public:
                              65,
                              105,
                              60,
-                             95){};
+                             95){
+
+                 };
+    static std::vector<SkillEffect> basicAttackEffects();
+    static std::vector<SkillEffect> specialAttackEffects();
+    virtual void updateSkill() noexcept override {};
     virtual ~Primeape() override = default;
 };
-
-// class PowerSpirit : public Spirit
-// {
-// public:
-//     PowerSpirit(const std::string &name, const Level &level, const Property &property) : Spirit(name, level, property){};
-//     virtual ~PowerSpirit() override = default;
-// };
-
-// class HealthSpirit : public Spirit
-// {
-// public:
-//     HealthSpirit(const std::string &name, const Level &level, const Property &property) : Spirit(name, level, property){};
-//     virtual ~HealthSpirit() override = default;
-// };
-
-// class DefenseSpirit : public Spirit
-// {
-// public:
-//     DefenseSpirit(const std::string &name, const Level &level, const Property &property) : Spirit(name, level, property){};
-//     virtual ~DefenseSpirit() override = default;
-// };
-
-// class SpeedSpirit : public Spirit
-// {
-// public:
-//     SpeedSpirit(const std::string &name, const Level &level, const Property &property) : Spirit(name, level, property){};
-//     virtual ~SpeedSpirit() override = default;
-// };
