@@ -19,6 +19,8 @@ public:
            const int &exp = 0) : Description(name, description), Level(level, exp), Property(hp, attackPower, defensePower, speed){};
     std::string format() const noexcept;
     virtual void addExp(int exp) noexcept override;
+    virtual void levelUp() noexcept override {};
+    virtual void updateSkill() noexcept override {};
     virtual ~Spirit() override = default;
 };
 

@@ -4,10 +4,14 @@
 #include "spirit.hpp"
 #include <memory>
 #include "json.hpp"
+#include "combat.hpp"
 using namespace std;
 int main()
 {
-    unique_ptr<Spirit> spirit = make_unique<Primeape>();
-    auto j = nlohmann::json::parse(spirit.get()->format());
-    cout << j.dump() << endl;
+    unique_ptr<Spirit> spirit1 = make_unique<Primeape>();
+    unique_ptr<Spirit> spirit2 = make_unique<Primeape>();
+    getchar();
+    Combat combat1(*spirit1, *spirit2);
+    getchar();
+    combat1.start();
 }

@@ -19,3 +19,8 @@ int utils::get_random_int(int min, int max)
     std::uniform_int_distribution<int> dis(min, max);
     return dis(gen);
 }
+
+bool utils::SkillEffectComparator(SkillEffect a, SkillEffect b)
+{
+    return a.activationTime < b.activationTime;
+}

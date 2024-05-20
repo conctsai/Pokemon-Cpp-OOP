@@ -50,6 +50,11 @@ struct SkillEffect
     Source source;
     int activationTime;
     int duration;
+
+    bool operator<(const SkillEffect &effect) const noexcept
+    {
+        return activationTime < effect.activationTime;
+    }
 };
 
 class Skill
@@ -63,7 +68,7 @@ public:
     Skill(const std::string &name, const std::string &description, const std::vector<SkillEffect> &effects) : name(name), description(description), effects(effects){};
     Skill(const Skill &skill) = default;
     Skill(Skill &&skill) = default;
-    std::vector<SkillEffect> getEffects() const noexcept { return effects; }
+    const std::vector<SkillEffect> &getEffects() const noexcept { return effects; }
     std::string format() const noexcept;
     ~Skill() = default;
 };
@@ -78,6 +83,16 @@ protected:
 public:
     SkillManager() = default;
     virtual void updateSkill() noexcept = 0;
+    Skill getBasicSkill() const noexcept { return Skill(*basicSkill); }
+    Skill getSpecialSkill() const noexcept { return Skill(*specialSkill); }
+    Skill getUltimateSkill() const noexcept { return Skill(*ultimateSkill); }
+    // 拷贝构造函数
+    SkillManager(const SkillManager &skillManager)
+    {
+        basicSkill = std::make_unique<Skill>(skillManager.getBasicSkill());
+        specialSkill = std::make_unique<Skill>(skillManager.getSpecialSkill());
+        ultimateSkill = std::make_unique<Skill>(skillManager.getUltimateSkill());
+    }
     std::string format() const noexcept;
     virtual ~SkillManager() = default;
 };
