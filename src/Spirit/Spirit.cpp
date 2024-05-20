@@ -1,8 +1,11 @@
-#include "spirit.h"
+#include "spirit.hpp"
 
 std::string Spirit::format() const noexcept
 {
-    return Description::format() + Level::format() + Property::format();
+    return "\{\n\"description\": " + Description::format() + ",\n" +
+           "\"property\": " + Property::format() + ",\n" +
+           "\"level\": " + Level::format() + ",\n" +
+           "\"skills\": " + SkillManager::format() + "\n}";
 }
 
 void Spirit::addExp(int exp) noexcept

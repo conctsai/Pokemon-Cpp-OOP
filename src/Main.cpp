@@ -1,7 +1,7 @@
-#include "database.h"
-#include "user.h"
-#include "utils.h"
-#include "spirit.h"
+#include "database.hpp"
+#include "user.hpp"
+#include "utils.hpp"
+#include "spirit.hpp"
 #include <memory>
 using namespace std;
 int main()

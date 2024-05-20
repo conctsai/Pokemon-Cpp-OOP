@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.29.2)
 
-project(test)
-
+project(Pokemon-Cpp-OOP)
 
 find_package(OpenSSL REQUIRED)
 find_package(SQLite3 REQUIRED)
@@ -15,6 +14,10 @@ file(GLOB_RECURSE SRC ${PROJECT_SOURCE_DIR}/src/*.cpp)
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/include/Database
+    ${PROJECT_SOURCE_DIR}/include/Spirit
+    ${PROJECT_SOURCE_DIR}/include/User
+    ${PROJECT_SOURCE_DIR}/include/Utils
     ${OPENSSL_INCLUDE_DIR}
     ${SQLite3_INCLUDE_DIRS}
 )

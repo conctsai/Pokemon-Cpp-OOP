@@ -1,9 +1,9 @@
+#pragma once
+
 #include <vector>
 #include <string>
 #include <sqlite3.h>
 #include <iostream>
-
-#pragma once
 
 #define DATABASE Database::getInstance()
 

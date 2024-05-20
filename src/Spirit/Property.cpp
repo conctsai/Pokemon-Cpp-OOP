@@ -1,4 +1,4 @@
-#include "property.h"
+#include "property.hpp"
 
 std::string Property::format() const noexcept
 {

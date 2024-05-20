@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "utils.hpp"
 
 std::string utils::getSHA256(const std::string &text)
 {
