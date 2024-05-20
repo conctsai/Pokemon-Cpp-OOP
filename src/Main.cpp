@@ -3,9 +3,11 @@
 #include "utils.hpp"
 #include "spirit.hpp"
 #include <memory>
+#include "json.hpp"
 using namespace std;
 int main()
 {
     unique_ptr<Spirit> spirit = make_unique<Primeape>();
-    cout << spirit.get()->format() << endl;
+    auto j = nlohmann::json::parse(spirit.get()->format());
+    cout << j.dump() << endl;
 }
