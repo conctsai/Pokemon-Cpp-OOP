@@ -9,7 +9,7 @@
     (goal == SELF ? "\"SELF\"" : (goal == ENEMY ? "\"ENEMY\"" : "\"UNKNOWN\""))
 
 #define GET_TYPE_STRING(type) \
-    (type == HP ? "\"HP\"" : (type == ATTACKPOWER ? "\"ATTACKPOWER\"" : (type == DEFENSEPOWER ? "\"DEFENSEPOWER\"" : (type == SPEED ? "\"SPEED\"" : (type == HP_PERCENT ? "\"HP_PERCENT\"" : (type == ATTACKPOWER_PERCENT ? "\"ATTACKPOWER_PERCENT\"" : (type == DEFENSEPOWER_PERCENT ? "\"DEFENSEPOWER_PERCENT\"" : (type == SPEED_PERCENT ? "\"SPEED_PERCENT\"" : (type == FIX_VALUE ? "\"FIX_VALUE\"" : "\"UNKNOWN\"")))))))))
+    (type == HP ? "\"HP\"" : (type == ATTACKPOWER ? "\"ATTACKPOWER\"" : (type == DEFENSEPOWER ? "\"DEFENSEPOWER\"" : (type == SPEED ? "\"SPEED\"" : (type == FIX_VALUE ? "\"FIX_VALUE\"" : "\"UNKNOWN\"")))))
 
 enum Type
 {
@@ -17,10 +17,6 @@ enum Type
     ATTACKPOWER,
     DEFENSEPOWER,
     SPEED,
-    HP_PERCENT,
-    ATTACKPOWER_PERCENT,
-    DEFENSEPOWER_PERCENT,
-    SPEED_PERCENT,
     FIX_VALUE,
 };
 
@@ -51,6 +47,7 @@ struct SkillEffect
     int activationTime;
     int duration;
 
+    // 重载<运算符用于优先队列排序
     bool operator<(const SkillEffect &effect) const noexcept
     {
         return activationTime < effect.activationTime;
@@ -70,6 +67,8 @@ public:
     Skill(Skill &&skill) = default;
     const std::vector<SkillEffect> &getEffects() const noexcept { return effects; }
     std::string format() const noexcept;
+    std::string getName() const noexcept { return name; }
+    std::string getDescription() const noexcept { return description; }
     ~Skill() = default;
 };
 

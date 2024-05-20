@@ -8,8 +8,8 @@
 using namespace std;
 int main()
 {
-    unique_ptr<Spirit> spirit1 = make_unique<Primeape>();
-    unique_ptr<Spirit> spirit2 = make_unique<Primeape>();
+    unique_ptr<Spirit> spirit1 = make_unique<Primeape>(Primeape("火爆猴1"));
+    unique_ptr<Spirit> spirit2 = make_unique<Primeape>(Primeape("火爆猴2"));
     getchar();
     Combat combat1(*spirit1, *spirit2);
     getchar();
