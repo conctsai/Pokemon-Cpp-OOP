@@ -1,4 +1,4 @@
-#include "combat.hpp"
+#include "Platform/combat.hpp"
 
 Combat::Combat(Spirit spirit1, Spirit spirit2)
 {

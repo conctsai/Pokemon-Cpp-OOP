@@ -1,4 +1,4 @@
-#include "skill.hpp"
+#include "Spirit/skill.hpp"
 
 std::string Skill::format() const noexcept
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "spirit.hpp"
+#include "Spirit/spirit.hpp"
 #include <memory>
 #include <queue>
 #include <vector>

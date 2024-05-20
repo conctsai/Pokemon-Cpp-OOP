@@ -1,6 +1,6 @@
-#include "user.hpp"
-#include "database.hpp"
-#include "utils.hpp"
+#include "User/user.hpp"
+#include "Database/database.hpp"
+#include "Utils/utils.hpp"
 #include <stdexcept>
 
 const UserDriver &UserDriver::getInstance() noexcept

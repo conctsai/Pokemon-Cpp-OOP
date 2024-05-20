@@ -1,10 +1,10 @@
-#include "database.hpp"
-#include "user.hpp"
-#include "utils.hpp"
-#include "spirit.hpp"
+#include "Database/database.hpp"
+#include "User/user.hpp"
+#include "Utils/utils.hpp"
+#include "Spirit/spirit.hpp"
 #include <memory>
-#include "json.hpp"
-#include "combat.hpp"
+#include "Utils/json.hpp"
+#include "Platform/combat.hpp"
 using namespace std;
 int main()
 {

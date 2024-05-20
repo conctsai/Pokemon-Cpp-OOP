@@ -14,11 +14,6 @@ file(GLOB_RECURSE SRC ${PROJECT_SOURCE_DIR}/src/*.cpp)
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/include/Database
-    ${PROJECT_SOURCE_DIR}/include/Spirit
-    ${PROJECT_SOURCE_DIR}/include/User
-    ${PROJECT_SOURCE_DIR}/include/Utils
-    ${PROJECT_SOURCE_DIR}/include/Platform
     ${OPENSSL_INCLUDE_DIR}
     ${SQLite3_INCLUDE_DIRS}
 )
