@@ -5,7 +5,7 @@
 #include <sstream>
 #include <iomanip>
 #include <random>
-#include "Spirit/skill.hpp"
+#include "Spirit/Skill.hpp"
 
 class utils
 {

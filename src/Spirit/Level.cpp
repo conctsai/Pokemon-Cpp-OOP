@@ -1,4 +1,4 @@
-#include "Spirit/level.hpp"
+#include "Spirit/Level.hpp"
 
 std::string Level::format() const noexcept
 {

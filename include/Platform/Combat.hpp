@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Spirit/spirit.hpp"
+#include "Spirit/Spirit.hpp"
 #include <memory>
 #include <queue>
 #include <vector>
 #include <iostream>
 #include <functional>
-#include "Utils/json.hpp"
+#include "Utils/Json.hpp"
 
 #define GET_PET_NAME(x) ((x) == 0 ? spirit1->getPetName() : (x) == 1 ? spirit2->getPetName() \
                                                                      : "Invalid index")

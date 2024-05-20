@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Spirit/description.hpp"
-#include "Spirit/level.hpp"
-#include "Spirit/property.hpp"
-#include "Utils/utils.hpp"
-#include "Spirit/skill.hpp"
+#include "Spirit/Description.hpp"
+#include "Spirit/Level.hpp"
+#include "Spirit/Property.hpp"
+#include "Utils/Utils.hpp"
+#include "Spirit/Skill.hpp"
 
 class Spirit : public Description, public Level, public Property, public SkillManager
 {

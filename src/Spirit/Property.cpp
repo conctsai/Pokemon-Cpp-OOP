@@ -1,4 +1,4 @@
-#include "Spirit/property.hpp"
+#include "Spirit/Property.hpp"
 
 std::string Property::format() const noexcept
 {
