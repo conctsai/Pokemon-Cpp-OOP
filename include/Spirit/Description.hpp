@@ -2,6 +2,8 @@
 
 #include <string>
 #include <sstream>
+#include "Utils/Json.hpp"
+#include <iostream>
 
 class Description
 {
@@ -12,9 +14,11 @@ private:
 
 public:
     Description(const std::string &name, const std::string &description, const std::string &petName) : name(name), description(description), petName(petName){};
+    Description(nlohmann::json j) : name(j["name"]), description(j["description"]), petName(j["petName"]){};
     std::string getName() const noexcept { return name; }
     std::string getDescription() const noexcept { return description; }
     std::string getPetName() const noexcept { return petName; }
     std::string format() const noexcept;
+    nlohmann::json toJson() const noexcept;
     virtual ~Description() = default;
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <sstream>
+#include "Utils/Json.hpp"
 
 #define EXPTONEXTLEVEL(level) (level * level)
 
@@ -18,10 +19,16 @@ public:
         expToNextLevel = EXPTONEXTLEVEL(level);
         progress = exp * 100 / expToNextLevel;
     };
+    Level(nlohmann::json j) : level(j["level"]), exp(j["exp"])
+    {
+        expToNextLevel = EXPTONEXTLEVEL(level);
+        progress = exp * 100 / expToNextLevel;
+    };
     int getLevel() const noexcept { return level; }
     int getExp() const noexcept { return exp; }
-    virtual void addExp(int exp) noexcept = 0;
-    virtual void levelUp() noexcept = 0;
+    virtual void addExp(int exp) noexcept {};
+    virtual void levelUp() noexcept {};
     std::string format() const noexcept;
+    nlohmann::json toJson() const noexcept;
     virtual ~Level() = default;
 };

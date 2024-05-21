@@ -11,3 +11,13 @@ std::string Property::format() const noexcept
     oss << "}" << std::endl;
     return oss.str();
 }
+
+nlohmann::json Property::toJson() const noexcept
+{
+    nlohmann::json j;
+    j["hp"] = hp;
+    j["attackPower"] = attackPower;
+    j["defensePower"] = defensePower;
+    j["speed"] = speed;
+    return j;
+}

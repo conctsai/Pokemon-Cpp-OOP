@@ -10,3 +10,12 @@ std::string Description::format() const noexcept
     oss << "}" << std::endl;
     return oss.str();
 }
+
+nlohmann::json Description::toJson() const noexcept
+{
+    nlohmann::json j;
+    j["name"] = name;
+    j["description"] = description;
+    j["petName"] = petName;
+    return j;
+}

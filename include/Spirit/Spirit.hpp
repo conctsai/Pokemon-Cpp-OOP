@@ -5,6 +5,8 @@
 #include "Spirit/Property.hpp"
 #include "Utils/Utils.hpp"
 #include "Spirit/Skill.hpp"
+#include "Utils/Json.hpp"
+#include <iostream>
 
 class Spirit : public Description, public Level, public Property, public SkillManager
 {
@@ -18,7 +20,9 @@ public:
            const int &speed,
            const int &level = 1,
            const int &exp = 0) : Description(name, description, petName), Level(level, exp), Property(hp, attackPower, defensePower, speed){};
+    Spirit(nlohmann::json j) : Description(j["description"]), Level(j["level"]), Property(j["property"]){};
     std::string format() const noexcept;
+    nlohmann::json toJson() const noexcept;
     virtual void addExp(int exp) noexcept override;
     virtual void levelUp() noexcept override {};
     virtual void updateSkill() noexcept override {};
@@ -37,6 +41,7 @@ public:
                 const int &speed,
                 const int &level = 1,
                 const int &exp = 0) : Spirit(name, description, petName, hp, attackPower, defensePower, speed, level, exp){};
+    PowerSpirit(nlohmann::json j) : Spirit(j){};
     virtual ~PowerSpirit() override = default;
     virtual void levelUp() noexcept override;
 };
@@ -81,6 +86,12 @@ public:
                                                                 {Goal::SELF, Type::DEFENSEPOWER, 10},
                                                                 0,
                                                                 0)});
+    };
+    Primeape(nlohmann::json j) : PowerSpirit(j)
+    {
+        basicSkill = std::make_unique<Skill>(j["skills"]["basicSkill"]);
+        specialSkill = std::make_unique<Skill>(j["skills"]["specialSkill"]);
+        ultimateSkill = std::make_unique<Skill>(j["skills"]["ultimateSkill"]);
     };
     virtual void updateSkill() noexcept override {};
     virtual ~Primeape() override = default;

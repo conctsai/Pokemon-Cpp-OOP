@@ -2,6 +2,8 @@
 #include <string>
 #include <sstream>
 
+#include "Utils/Json.hpp"
+
 class Property
 {
 protected:
@@ -16,6 +18,7 @@ protected:
 
 public:
     Property(int hp, int attackPower, int defensePower, int speed) : hp(hp), attackPower(attackPower), defensePower(defensePower), speed(speed){};
+    Property(nlohmann::json j) : hp(j["hp"]), attackPower(j["attackPower"]), defensePower(j["defensePower"]), speed(j["speed"]){};
     int getHp() const noexcept { return hp; }
     int getAttackPower() const noexcept { return attackPower; }
     int getDefensePower() const noexcept { return defensePower; }
@@ -45,5 +48,6 @@ public:
         this->speed = speed;
     }
     std::string format() const noexcept;
+    nlohmann::json toJson() const noexcept;
     virtual ~Property() = default;
 };

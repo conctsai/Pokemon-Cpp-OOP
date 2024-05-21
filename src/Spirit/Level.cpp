@@ -11,3 +11,13 @@ std::string Level::format() const noexcept
     oss << "}" << std::endl;
     return oss.str();
 }
+
+nlohmann::json Level::toJson() const noexcept
+{
+    nlohmann::json j;
+    j["level"] = level;
+    j["exp"] = exp;
+    j["expToNextLevel"] = expToNextLevel;
+    j["progress"] = progress;
+    return j;
+}

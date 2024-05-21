@@ -28,3 +28,13 @@ void PowerSpirit::levelUp() noexcept
     this->speed += utils::get_random_int(3, 6);
     this->hp += utils::get_random_int(3, 6);
 }
+
+nlohmann::json Spirit::toJson() const noexcept
+{
+    nlohmann::json j;
+    j["description"] = Description::toJson();
+    j["property"] = Property::toJson();
+    j["level"] = Level::toJson();
+    j["skills"] = SkillManager::toJson();
+    return j;
+}
