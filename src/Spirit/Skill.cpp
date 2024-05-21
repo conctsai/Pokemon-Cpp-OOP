@@ -12,12 +12,12 @@ std::string Skill::format() const noexcept
         oss << "    {" << std::endl;
         oss << "      \"description\": \"" << effects[i].description << "\"," << std::endl;
         oss << "      \"target\": {" << std::endl;
-        oss << "        \"goal\": " << GET_GOAL_STRING(effects[i].target.goal) << "," << std::endl;
-        oss << "        \"type\": " << GET_TYPE_STRING(effects[i].target.type) << std::endl;
+        oss << "        \"goal\": \"" << GET_GOAL_STRING(effects[i].target.goal) << "\"," << std::endl;
+        oss << "        \"type\": \"" << GET_TYPE_STRING(effects[i].target.type) << "\"" << std::endl;
         oss << "      }," << std::endl;
         oss << "      \"source\": {" << std::endl;
-        oss << "        \"goal\": " << GET_GOAL_STRING(effects[i].source.goal) << "," << std::endl;
-        oss << "        \"type\": " << GET_TYPE_STRING(effects[i].source.type) << "," << std::endl;
+        oss << "        \"goal\": \"" << GET_GOAL_STRING(effects[i].source.goal) << "\"," << std::endl;
+        oss << "        \"type\": \"" << GET_TYPE_STRING(effects[i].source.type) << "\"," << std::endl;
         oss << "        \"value\": " << effects[i].source.value << std::endl;
         oss << "      }," << std::endl;
         oss << "      \"activationTime\": " << effects[i].activationTime << "," << std::endl;

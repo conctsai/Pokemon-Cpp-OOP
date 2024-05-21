@@ -67,8 +67,10 @@ void Combat::start() noexcept
             }
         }
         update();
-        std::cout << spirit1->getPetName() << " " << nlohmann::json::parse(spirit1->format())["property"].dump(0) << std::endl;
-        std::cout << spirit2->getPetName() << " " << nlohmann::json::parse(spirit2->format())["property"].dump(0) << std::endl;
+        std::cout << spirit1->getPetName() << "\n"
+                  << spirit1->toJson()["property"].dump(4) << std::endl;
+        std::cout << spirit2->getPetName() << "\n"
+                  << spirit2->toJson()["property"].dump(4) << std::endl;
     }
 }
 

@@ -76,16 +76,18 @@ public:
         ultimateSkill = std::make_unique<Skill>(std::string("地球上投"),
                                                 std::string("火暴猴用拳头猛击对手，造成攻击力30%的伤害，并恢复自身防御力10%的生命值"),
                                                 std::vector<SkillEffect>{
-                                                    SkillEffect("地球上投",
-                                                                {Goal::ENEMY, Type::HP},
-                                                                {Goal::SELF, Type::ATTACKPOWER, -30},
-                                                                0,
-                                                                0),
-                                                    SkillEffect(("地球上投"),
-                                                                {Goal::SELF, Type::HP},
-                                                                {Goal::SELF, Type::DEFENSEPOWER, 10},
-                                                                0,
-                                                                0)});
+                                                    SkillEffect{
+                                                        "地球上投",
+                                                        {Goal::ENEMY, Type::HP},
+                                                        {Goal::SELF, Type::ATTACKPOWER, -30},
+                                                        0,
+                                                        0},
+                                                    SkillEffect{
+                                                        ("地球上投"),
+                                                        {Goal::SELF, Type::HP},
+                                                        {Goal::SELF, Type::DEFENSEPOWER, 10},
+                                                        0,
+                                                        0}});
     };
     Primeape(nlohmann::json j) : PowerSpirit(j)
     {
