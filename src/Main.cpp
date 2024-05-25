@@ -5,11 +5,9 @@
 #include <memory>
 #include "Utils/Json.hpp"
 #include "Platform/Combat.hpp"
+#include "Database/SpiritDriver.hpp"
 using namespace std;
+using namespace nlohmann;
 int main()
 {
-    unique_ptr<Primeape> p1 = make_unique<Primeape>(std::string("czz"));
-    unique_ptr<Primeape> p2 = make_unique<Primeape>(std::string("wyf"));
-    Combat combat((Spirit(*p1)), (Spirit(*p2)));
-    combat.start();
 }

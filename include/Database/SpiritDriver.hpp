@@ -2,6 +2,8 @@
 #include <vector>
 #include "User/User.hpp"
 
+#define SPIRITDRIVER SpiritDirver::getInstance()
+
 struct SpiritInterface
 {
     int id;

@@ -49,8 +49,9 @@ SpiritInterface SpiritDirver::getSpiritById(int id) const
 SpiritInterface SpiritDirver::insertSpirit(int user_id, const std::string &spirit_json) const
 {
     USERDRIVER.getUserById(user_id);
-
     DATABASE.insert(this->table_name, "user_id, spirit_json", std::to_string(user_id) + ", '" + spirit_json + "'");
+    std::vector<SpiritInterface> spirits = this->getSpiritsByUserId(user_id);
+    return spirits[spirits.size() - 1];
 }
 
 const SpiritDirver &SpiritDirver::getInstance() noexcept
