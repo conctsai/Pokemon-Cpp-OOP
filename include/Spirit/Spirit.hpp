@@ -3,9 +3,9 @@
 #include "Spirit/Description.hpp"
 #include "Spirit/Level.hpp"
 #include "Spirit/Property.hpp"
-#include "Utils/Utils.hpp"
 #include "Spirit/Skill.hpp"
 #include "Utils/Json.hpp"
+#include "Utils/Utils.hpp"
 #include <iostream>
 
 class Spirit : public Description, public Level, public Property, public SkillManager

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Database/Database.hpp"
 #include <vector>
 #include "User/User.hpp"

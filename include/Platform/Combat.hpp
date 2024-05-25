@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Spirit/Spirit.hpp"
+#include "Utils/Utils.hpp"
 #include <memory>
 #include <queue>
 #include <vector>

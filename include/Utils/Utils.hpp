@@ -6,6 +6,9 @@
 #include <iomanip>
 #include <random>
 #include "Spirit/Skill.hpp"
+#include "Spirit/Spirit.hpp"
+#include "Utils/Json.hpp"
+#include <memory>
 
 class utils
 {
