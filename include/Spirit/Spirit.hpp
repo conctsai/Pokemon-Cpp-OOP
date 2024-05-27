@@ -7,6 +7,7 @@
 #include "Utils/Json.hpp"
 #include "Utils/Utils.hpp"
 #include <iostream>
+#include <fmt/core.h>
 
 class Spirit : public Description, public Level, public Property, public SkillManager
 {
@@ -57,37 +58,7 @@ public:
                                                 60,
                                                 95)
     {
-        basicSkill = std::make_unique<Skill>(std::string("基础攻击"),
-                                             std::string("火暴猴用拳头猛击对手，造成攻击力10%的伤害"),
-                                             std::vector<SkillEffect>{
-                                                 SkillEffect("火爆猴普通攻击",
-                                                             {Goal::ENEMY, Type::HP},
-                                                             {Goal::SELF, Type::ATTACKPOWER, -10},
-                                                             0,
-                                                             0)});
-        specialSkill = std::make_unique<Skill>(std::string("恢复"),
-                                               std::string("恢复防御力20%的生命值"),
-                                               std::vector<SkillEffect>{
-                                                   SkillEffect("恢复",
-                                                               {Goal::SELF, Type::HP},
-                                                               {Goal::SELF, Type::DEFENSEPOWER, 20},
-                                                               0,
-                                                               0)});
-        ultimateSkill = std::make_unique<Skill>(std::string("地球上投"),
-                                                std::string("火暴猴用拳头猛击对手，造成攻击力30%的伤害，并恢复自身防御力10%的生命值"),
-                                                std::vector<SkillEffect>{
-                                                    SkillEffect{
-                                                        "地球上投",
-                                                        {Goal::ENEMY, Type::HP},
-                                                        {Goal::SELF, Type::ATTACKPOWER, -30},
-                                                        0,
-                                                        0},
-                                                    SkillEffect{
-                                                        ("地球上投"),
-                                                        {Goal::SELF, Type::HP},
-                                                        {Goal::SELF, Type::DEFENSEPOWER, 10},
-                                                        0,
-                                                        0}});
+        updateSkill();
     };
     Primeape(nlohmann::json j) : PowerSpirit(j)
     {
@@ -95,6 +66,45 @@ public:
         specialSkill = std::make_unique<Skill>(j["skills"]["specialSkill"]);
         ultimateSkill = std::make_unique<Skill>(j["skills"]["ultimateSkill"]);
     };
-    virtual void updateSkill() noexcept override {};
+    virtual void updateSkill() noexcept override
+    {
+        SkillCoef = 1.0 + (1.0 / 14) * (level - 1);
+        basicSkill = std::make_unique<Skill>(std::string("基础攻击"),
+                                             fmt::format("火暴猴用拳头猛击对手，造成攻击力 {} % 的伤害", static_cast<int>(10 * SkillCoef)),
+                                             std::vector<SkillEffect>{
+                                                 SkillEffect("火爆猴普通攻击",
+                                                             {Goal::ENEMY, Type::HP},
+                                                             {Goal::SELF, Type::ATTACKPOWER, static_cast<int>(-10 * SkillCoef)},
+                                                             0,
+                                                             0)});
+        specialSkill = std::make_unique<Skill>(std::string("恢复"),
+                                               fmt::format("火暴猴恢复自身防御力 {} % 的生命值", static_cast<int>(20 * SkillCoef)),
+                                               std::vector<SkillEffect>{
+                                                   SkillEffect("恢复",
+                                                               {Goal::SELF, Type::HP},
+                                                               {Goal::SELF, Type::DEFENSEPOWER, static_cast<int>(20 * SkillCoef)},
+                                                               0,
+                                                               0)});
+        ultimateSkill = std::make_unique<Skill>(std::string("地球上投"),
+                                                fmt::format("火暴猴用拳头猛击对手，造成攻击力 {} % 的伤害，并恢复自身防御力 {} % 的生命值", static_cast<int>(30 * SkillCoef), static_cast<int>(10 * SkillCoef)),
+                                                std::vector<SkillEffect>{
+                                                    SkillEffect{
+                                                        "地球上投",
+                                                        {Goal::ENEMY, Type::HP},
+                                                        {Goal::SELF, Type::ATTACKPOWER, static_cast<int>(-30 * SkillCoef)},
+                                                        0,
+                                                        0},
+                                                    SkillEffect{
+                                                        ("地球上投"),
+                                                        {Goal::SELF, Type::HP},
+                                                        {Goal::SELF, Type::DEFENSEPOWER, static_cast<int>(10 * SkillCoef)},
+                                                        0,
+                                                        0}});
+    };
+    virtual void levelUp() noexcept override
+    {
+        PowerSpirit::levelUp();
+        updateSkill();
+    }
     virtual ~Primeape() override = default;
 };

@@ -95,6 +95,7 @@ public:
 class SkillManager
 {
 protected:
+    double SkillCoef;
     std::unique_ptr<Skill> basicSkill;
     std::unique_ptr<Skill> specialSkill;
     std::unique_ptr<Skill> ultimateSkill;

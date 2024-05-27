@@ -4,7 +4,7 @@ project(Pokemon-Cpp-OOP)
 
 find_package(OpenSSL REQUIRED)
 find_package(SQLite3 REQUIRED)
-
+find_package(fmt REQUIRED)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -24,3 +24,4 @@ add_executable(app ${SRC})
 
 target_link_libraries(app PUBLIC ${OPENSSL_LIBRARIES})
 target_link_libraries(app PUBLIC ${SQLite3_LIBRARIES})
+target_link_libraries(app PUBLIC fmt::fmt)

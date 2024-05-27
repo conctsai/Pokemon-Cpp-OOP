@@ -11,7 +11,7 @@ std::string Spirit::format() const noexcept
 void Spirit::addExp(int exp) noexcept
 {
     this->exp += exp;
-    while (exp >= expToNextLevel)
+    while (level < 15 && exp >= expToNextLevel)
     {
         level++;
         exp -= expToNextLevel;
