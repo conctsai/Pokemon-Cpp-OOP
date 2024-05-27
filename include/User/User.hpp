@@ -6,7 +6,7 @@
 
 class UserManager
 {
-private:
+protected:
     UserInterface user;
     bool is_login = false;
 

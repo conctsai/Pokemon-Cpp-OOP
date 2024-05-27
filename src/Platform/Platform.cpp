@@ -1,42 +1,17 @@
 #include "Platform/Platform.hpp"
 
-Platform::Platform()
+void Platform::init() noexcept
 {
-    std::string username;
-    std::string password;
-    while (true)
+    if (!this->is_login)
     {
-        std::cout << "输入用户名：" << std::endl;
-        std::cin >> username;
-        std::cout << "输入密码：" << std::endl;
-        std::cin >> password;
-
-        user_manager.login(username, password);
-
-        if (user_manager.getLoginStatus())
-        {
-            std::cout << "登录成功" << std::endl;
-            break;
-        }
-        else
-        {
-            std::cout << "登录失败，请重新登录" << std::endl
-                      << std::endl;
-        }
+        exit(-1);
     }
-
-    spiritInfos = SPIRITDRIVER.getAllSpirits();
-    spiritNums = spiritInfos.size();
-
-    for (int i = 0; i < spiritNums; i++)
+    else
     {
-        spirits.push_back(SpiritUtils::getSpirit(nlohmann::json::parse(spiritInfos[i].spirit_json)));
-    }
-
-    std::cout << "您有" << spiritNums << "个精灵" << std::endl;
-
-    for (int i = 0; i < spiritNums; i++)
-    {
-        std::cout << spirits[i]->toJson().dump();
+        spiritInfos = SPIRITDRIVER.getSpiritsByUserId(this->user.id);
+        for (int i = 0; i < spiritInfos.size(); i++)
+        {
+            spirits.push_back(SpiritUtils::getSpirit(spiritInfos[i].spirit_json));
+        }
     }
 }

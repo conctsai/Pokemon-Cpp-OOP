@@ -6,7 +6,8 @@ find_package(OpenSSL REQUIRED)
 find_package(SQLite3 REQUIRED)
 find_package(fmt REQUIRED)
 find_package(ftxui 5 REQUIRED)
-find_package(Boost REQUIRED COMPONENTS system thread)
+
+set(LIBHV_LIBRARYS /usr/local/lib/libhv.so)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -31,5 +32,5 @@ foreach(TARGET_FILE ${TARGET_LIST})
     target_link_libraries(${TARGET_NAME} PUBLIC ${SQLite3_LIBRARIES})
     target_link_libraries(${TARGET_NAME} PUBLIC fmt::fmt)
     target_link_libraries(${TARGET_NAME} PUBLIC ftxui::screen ftxui::dom ftxui::component)
-    target_link_libraries(${TARGET_NAME} PUBLIC Boost::system Boost::thread)
+    target_link_libraries(${TARGET_NAME} PUBLIC ${LIBHV_LIBRARYS})
 endforeach(TARGET_FILE ${TARGET_LIST})
