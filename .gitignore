@@ -1,4 +1,8 @@
 .vscode/
 .cache/
+target/*.log
+target/game.db
+target/Server
+target/Client
 Backups/
 build/

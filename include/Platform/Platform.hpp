@@ -4,6 +4,7 @@
 #include "Database/SpiritDriver.hpp"
 #include "Spirit/Spirit.hpp"
 #include "Utils/SpiritUtils.hpp"
+#include <hv/HttpServer.h>
 #include <iostream>
 
 class Platform : public UserManager
@@ -16,6 +17,6 @@ private:
 public:
     Platform() = default;
     void init() noexcept;
-
+    hv::Json getSpirits() const noexcept;
     ~Platform() = default;
 };

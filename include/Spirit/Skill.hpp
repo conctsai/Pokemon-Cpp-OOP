@@ -4,7 +4,7 @@
 #include <vector>
 #include <sstream>
 #include <memory>
-#include "Utils/Json.hpp"
+#include "hv/json.hpp"
 
 #define GET_GOAL_STRING(goal) \
     (goal == SELF ? "SELF" : "ENEMY")
