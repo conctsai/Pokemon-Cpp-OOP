@@ -6,6 +6,7 @@
 #include "Utils/SpiritUtils.hpp"
 #include <hv/HttpServer.h>
 #include <iostream>
+#include <algorithm>
 
 class Platform : public UserManager
 {
@@ -18,5 +19,7 @@ public:
     Platform() = default;
     void init() noexcept;
     hv::Json getSpirits() const noexcept;
+    int getMaxLevel() const noexcept;
+    virtual int registerUser(const std::string &username, const std::string &password) noexcept override;
     ~Platform() = default;
 };

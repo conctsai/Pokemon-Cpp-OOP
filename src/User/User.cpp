@@ -32,15 +32,15 @@ void UserManager::logout() noexcept
     this->is_login = false;
 }
 
-bool UserManager::registerUser(const std::string &username, const std::string &password) noexcept
+int UserManager::registerUser(const std::string &username, const std::string &password) noexcept
 {
     try
     {
-        USERDRIVER.insertUser(username, password);
-        return true;
+        UserInterface ui = USERDRIVER.insertUser(username, password);
+        return ui.id;
     }
     catch (const std::invalid_argument &e)
     {
-        return false;
+        return -1;
     }
 }

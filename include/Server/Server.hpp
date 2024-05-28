@@ -2,6 +2,7 @@
 #include <map>
 #include "Platform/Platform.hpp"
 #include <memory>
+#include <iostream>
 
 class Server
 {

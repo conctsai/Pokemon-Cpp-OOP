@@ -32,3 +32,10 @@ public:
     ~SpiritDirver() = default;
     static const SpiritDirver &getInstance() noexcept;
 };
+
+
+// 建表语句
+// CREATE TABLE spirits(
+//     id integer primary key,
+//     user_id integer not null,
+//     spirit_json text not null)

@@ -15,6 +15,6 @@ public:
     bool login(const std::string &, const std::string &) noexcept;
     void logout() noexcept;
     bool getLoginStatus() const noexcept;
-    bool registerUser(const std::string &, const std::string &) noexcept;
+    virtual int registerUser(const std::string &, const std::string &) noexcept;
     ~UserManager() = default;
 };

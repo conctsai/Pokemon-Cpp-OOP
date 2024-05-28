@@ -34,3 +34,9 @@ public:
     UserInterface insertUser(const std::string &, const std::string &) const;
     static const UserDriver &getInstance() noexcept;
 };
+
+// 建表语句
+// CREATE TABLE users(
+//     id integer primary key autoincrement,
+//     username text not null,
+//     password_hash text not null)

@@ -89,6 +89,31 @@ Server::Server(int port)
         }
         return ctx->send(resp.dump()); });
 
+    router.GET("/random_spirits", [&](const HttpContextPtr &ctx)
+               {
+        hv::Json req = hv::Json::parse(ctx->body());
+        hv::Json resp;
+        int id = req["session_id"];
+        if (platforms.find(id) == platforms.end())
+        {
+            ctx->setStatus(http_status::HTTP_STATUS_NOT_FOUND);
+            resp["msg"] = "Invalid session id";
+        }
+        else
+        {
+            if (!platforms[id]->getLoginStatus())
+            {
+                ctx->setStatus(http_status::HTTP_STATUS_NOT_FOUND);
+                resp["msg"] = "Not logged in";
+            }
+            else
+            {
+                ctx->setStatus(http_status::HTTP_STATUS_OK);
+                resp = SpiritUtils::getRandomSpirits(platforms[id]->getMaxLevel());
+            }
+        }
+        return ctx->send(resp.dump()); });
+
     server.port = port;
     server.service = &router;
 }

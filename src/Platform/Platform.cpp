@@ -25,3 +25,27 @@ hv::Json Platform::getSpirits() const noexcept
     }
     return j;
 }
+
+int Platform::getMaxLevel() const noexcept
+{
+    auto max_iter = std::max_element(spirits.begin(), spirits.end(), [](const std::unique_ptr<Spirit> &a, const std::unique_ptr<Spirit> &b)
+                                     { return a->getLevel() < b->getLevel(); });
+
+    return (*max_iter)->getLevel();
+}
+
+int Platform::registerUser(const std::string &username, const std::string &password) noexcept
+{
+    int id = UserManager::registerUser(username, password);
+    if (id == -1)
+    {
+        return 0;
+    }
+    else
+    {
+        SPIRITDRIVER.insertSpirit(id, SpiritUtils::getRandomSpirits(1).dump());
+        SPIRITDRIVER.insertSpirit(id, SpiritUtils::getRandomSpirits(1).dump());
+        SPIRITDRIVER.insertSpirit(id, SpiritUtils::getRandomSpirits(1).dump());
+        return 1; // 注册成功，每个用户注册时赠送3个精灵
+    }
+}

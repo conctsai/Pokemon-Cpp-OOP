@@ -1,6 +1,10 @@
-#include "hv/hv.h"
+#include "Platform/Platform.hpp"
 #include <iostream>
+
 int main()
 {
-    std::cout << hv_compile_version() << std::endl;
+    Platform platform;
+    platform.login("conc", "123456");
+    platform.init();
+    std::cout << platform.getMaxLevel();
 }
