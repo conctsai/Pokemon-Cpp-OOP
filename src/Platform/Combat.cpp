@@ -14,63 +14,66 @@ Combat::Combat(Spirit spirit1, Spirit spirit2)
 
 void Combat::start() noexcept
 {
-    std::cout << "精灵1：" << spirit1->getPetName() << " VS 精灵2：" << spirit2->getPetName() << std::endl;
-    std::cout << "按下Enter键战斗开始！" << std::endl;
-    getchar(); // 暂停
+    result["fighter"].push_back(spirit1->getPetName());
+    result["fighter"].push_back(spirit2->getPetName());
     while (spirit1->getHp() > 0 && spirit2->getHp() > 0)
     {
-        getchar();
+        tmp.clear();
         int speedSum = spirit1->getSpeed() + spirit2->getSpeed();
         int rand = utils::get_random_int(1, speedSum);
         if (rand <= spirit1->getSpeed())
         {
-            std::cout << spirit1->getPetName() << " 此轮攻击！" << std::endl;
             int skillIndex = utils::get_random_int(0, 2);
-            std::cout << spirit1->getPetName() << " 发动技能 ";
             if (skillIndex == 0)
             {
-                std::cout << spirit1->getBasicSkill().getName() << std::endl;
+                tmp["attack"] = spirit1->getPetName() + " 此轮攻击！，发动技能 " + spirit1->getBasicSkill().getName();
             }
             else if (skillIndex == 1)
             {
-                std::cout << spirit1->getSpecialSkill().getName() << std::endl;
+                tmp["attack"] = spirit1->getPetName() + " 此轮攻击！，发动技能 " + spirit1->getSpecialSkill().getName();
             }
             else
             {
-                std::cout << spirit1->getUltimateSkill().getName() << std::endl;
+                tmp["attack"] = spirit1->getPetName() + " 此轮攻击！，发动技能 " + spirit1->getUltimateSkill().getName();
             }
             for (auto &effect : spirit1SkillEffects[skillIndex])
             {
-                skillQueue1.push(effect);
+                skillQueue1.push(toFixValue(Goal::SELF, effect));
             }
         }
         else
         {
-            std::cout << spirit2->getPetName() << " 此轮攻击！" << std::endl;
             int skillIndex = utils::get_random_int(0, 2);
-            std::cout << spirit2->getPetName() << " 发动技能 ";
             if (skillIndex == 0)
             {
-                std::cout << spirit2->getBasicSkill().getName() << std::endl;
+                tmp["attack"] = spirit2->getPetName() + " 此轮攻击！，发动技能 " + spirit2->getBasicSkill().getName();
             }
             else if (skillIndex == 1)
             {
-                std::cout << spirit2->getSpecialSkill().getName() << std::endl;
+                tmp["attack"] = spirit2->getPetName() + " 此轮攻击！，发动技能 " + spirit2->getSpecialSkill().getName();
             }
             else
             {
-                std::cout << spirit2->getUltimateSkill().getName() << std::endl;
+                tmp["attack"] = spirit2->getPetName() + " 此轮攻击！，发动技能 " + spirit2->getUltimateSkill().getName();
             }
             for (auto &effect : spirit2SkillEffects[skillIndex])
             {
-                skillQueue2.push(effect);
+                skillQueue2.push(toFixValue(Goal::ENEMY, effect));
             }
         }
         update();
-        std::cout << spirit1->getPetName() << "\n"
-                  << spirit1->toJson()["property"].dump(4) << std::endl;
-        std::cout << spirit2->getPetName() << "\n"
-                  << spirit2->toJson()["property"].dump(4) << std::endl;
+        tmp["property"].push_back(spirit1->toJson()["property"]);
+        tmp["property"].push_back(spirit2->toJson()["property"]);
+        result["round"].push_back(tmp);
+    }
+
+    if (spirit1->getHp() <= 0)
+    {
+        result["winner"] = 1;
+    }
+    else
+    {
+        result["winner"] = 0;
     }
 }
 
@@ -278,12 +281,37 @@ void Combat::handleEffect(Goal now, Source s, Target t, std::string des) noexcep
     }
     else
     {
-        value = getValue(now, s.goal, s.type) * s.value / 100;
+        exit(-1);
     }
 
-    setValue(now, t.goal, t.type, getValue(now, t.goal, t.type) + value);
+    int rd = utils::get_random_int(1, 10);
+    if (rd == 1)
+    {
+        // 未命中
+        tmp["result"].push_back(GET_PET_NAME((now + t.goal) % 2) + " 的 " + des + " 技能未命中！");
+    }
+    else if (rd == 2)
+    {
+        // 暴击
+        setValue(now, t.goal, t.type, getValue(now, t.goal, t.type) + value * 1.5);
+        tmp["result"].push_back(GET_PET_NAME((now + t.goal) % 2) + " 受到了 " + GET_PET_NAME(now) + " 的 " + des + " 技能的影响，" + GET_TYPE_STRING(t.type) + " 由 " + std::to_string(getOldValue(now, t.goal, t.type)) + " 变为 " + std::to_string(getValue(now, t.goal, t.type)) + "，暴击！");
+    }
+    else
+    {
+        // 正常
+        setValue(now, t.goal, t.type, getValue(now, t.goal, t.type) + value);
+        tmp["result"].push_back(GET_PET_NAME((now + t.goal) % 2) + " 受到了 " + GET_PET_NAME(now) + " 的 " + des + " 技能的影响，" + GET_TYPE_STRING(t.type) + " 由 " + std::to_string(getOldValue(now, t.goal, t.type)) + " 变为 " + std::to_string(getValue(now, t.goal, t.type)));
+    }
+}
 
-    std::cout << GET_PET_NAME((now + t.goal) % 2) << " 受到了 " << GET_PET_NAME(now) << " 的 " << des << " 技能的影响，"
-              << GET_TYPE_STRING(t.type) << " 由 " << getOldValue(now, t.goal, t.type) << " 变为 "
-              << getValue(now, t.goal, t.type) << std::endl;
+SkillEffect Combat::toFixValue(Goal g, SkillEffect se) noexcept
+{
+    if (se.source.type == Type::FIX_VALUE)
+    {
+        return se;
+    }
+    int value = getValue(g, se.source.goal, se.source.type) * se.source.value / 100;
+    se.source.type = Type::FIX_VALUE;
+    se.source.value = value;
+    return se;
 }

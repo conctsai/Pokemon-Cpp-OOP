@@ -1,7 +1,9 @@
+#include <iostream>
+#include "Platform/Combat.hpp"
 #include "Server/Server.hpp"
 
 int main()
 {
-    Server server(8080);
-    server.run();
+    Server s(8080);
+    s.run();
 }

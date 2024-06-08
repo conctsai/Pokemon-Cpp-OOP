@@ -54,6 +54,32 @@ SpiritInterface SpiritDirver::insertSpirit(int user_id, const std::string &spiri
     return spirits[spirits.size() - 1];
 }
 
+bool SpiritDirver::deleteSpirit(int id) const
+{
+    std::vector<std::string> result = std::move(DATABASE.queryByCondition(this->table_name, "id = " + std::to_string(id)));
+
+    if (result.size() == 0)
+    {
+        return false;
+    }
+
+    DATABASE.deleteByCondition(this->table_name, "id = " + std::to_string(id));
+    return true;
+}
+
+bool SpiritDirver::UpdateSpirit(int id, const std::string &spirit_json) const
+{
+    std::vector<std::string> result = std::move(DATABASE.queryByCondition(this->table_name, "id = " + std::to_string(id)));
+
+    if (result.size() == 0)
+    {
+        return false;
+    }
+
+    DATABASE.updateByCondition(this->table_name, "spirit_json = '" + spirit_json + "'", "id = " + std::to_string(id));
+    return true;
+}
+
 const SpiritDirver &SpiritDirver::getInstance() noexcept
 {
     static SpiritDirver instance;

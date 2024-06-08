@@ -1,6 +1,7 @@
 #include "hv/HttpServer.h"
 #include <map>
 #include "Platform/Platform.hpp"
+#include "Platform/Combat.hpp"
 #include <memory>
 #include <iostream>
 

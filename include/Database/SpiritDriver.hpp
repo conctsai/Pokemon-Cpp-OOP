@@ -29,10 +29,11 @@ public:
     std::vector<SpiritInterface> getSpiritsByUserId(int user_id) const;
     SpiritInterface getSpiritById(int id) const;
     SpiritInterface insertSpirit(int user_id, const std::string &spirit_json) const;
+    bool deleteSpirit(int id) const;
+    bool UpdateSpirit(int id, const std::string &spirit_json) const;
     ~SpiritDirver() = default;
     static const SpiritDirver &getInstance() noexcept;
 };
-
 
 // 建表语句
 // CREATE TABLE spirits(

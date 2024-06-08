@@ -74,6 +74,26 @@ bool Database::insert(const std::string &table_name, const std::string &columns,
     return true;
 }
 
+bool Database::deleteByCondition(const std::string &table_name, const std::string &condition) const
+{
+    std::string querySQL = "DELETE FROM " + table_name + " WHERE " + condition + ";";
+    if (sqlite3_exec(this->db, querySQL.c_str(), NULL, NULL, NULL) != SQLITE_OK)
+    {
+        exit(-1);
+    }
+    return true;
+}
+
+bool Database::updateByCondition(const std::string &table_name, const std::string &new_value, const std::string &condition) const
+{
+    std::string querySQL = "UPDATE " + table_name + " SET " + new_value + " WHERE " + condition + ";";
+    if (sqlite3_exec(this->db, querySQL.c_str(), NULL, NULL, NULL) != SQLITE_OK)
+    {
+        exit(-1);
+    }
+    return true;
+}
+
 Database::~Database()
 {
     sqlite3_close(db);
