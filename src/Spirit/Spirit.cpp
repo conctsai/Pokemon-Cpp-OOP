@@ -29,6 +29,30 @@ void PowerSpirit::levelUp() noexcept
     this->hp += utils::get_random_int(3, 6);
 }
 
+void HPSpirit::levelUp() noexcept
+{
+    this->attackPower += utils::get_random_int(3, 6);
+    this->defensePower += utils::get_random_int(3, 6);
+    this->speed += utils::get_random_int(3, 6);
+    this->hp += utils::get_random_int(5, 8);
+}
+
+void DefenseSpirit::levelUp() noexcept
+{
+    this->attackPower += utils::get_random_int(3, 6);
+    this->defensePower += utils::get_random_int(5, 8);
+    this->speed += utils::get_random_int(3, 6);
+    this->hp += utils::get_random_int(3, 6);
+}
+
+void SpeedSpirit::levelUp() noexcept
+{
+    this->attackPower += utils::get_random_int(3, 6);
+    this->defensePower += utils::get_random_int(3, 6);
+    this->speed += utils::get_random_int(5, 8);
+    this->hp += utils::get_random_int(3, 6);
+}
+
 nlohmann::json Spirit::toJson() const noexcept
 {
     nlohmann::json j;

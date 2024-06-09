@@ -3,6 +3,7 @@
 #include <string>
 #include "Client/ClientHttpDriver.hpp"
 #include "Utils/Utils.hpp"
+#include <fmt/color.h>
 
 enum Interface
 {
@@ -14,7 +15,10 @@ enum Interface
     LOGOUT,
     BAG,
     MY_SPIRITS,
+    ONLINE_USERS,
     COMBAT,
+    MEDALS,
+    WIN_RATE,
     EXIT,
 };
 
@@ -42,6 +46,7 @@ public:
     void run()
     {
         std::string input;
+        int maxLevelCount = 0;
         while (true)
         {
             std::cout << "\033[2J";   // ANSI转义序列，用于清屏
@@ -105,7 +110,9 @@ public:
                 std::cout << "            1. 我的精灵                    \n";
                 std::cout << "            2. 战斗                        \n";
                 std::cout << "            3. 在线用户                    \n";
-                std::cout << "            4. 退出登录                    \n";
+                std::cout << "            4. 查看胜率                    \n";
+                std::cout << "            5. 查看徽章                    \n";
+                std::cout << "            6. 退出登录                    \n";
                 std::cout << "===========================================\n";
                 std::cout << "            请选择：";
                 getline(std::cin, input);
@@ -118,8 +125,15 @@ public:
                     status = COMBAT;
                     break;
                 case 3:
+                    status = ONLINE_USERS;
                     break;
                 case 4:
+                    status = WIN_RATE;
+                    break;
+                case 5:
+                    status = MEDALS;
+                    break;
+                case 6:
                     status = LOGOUT;
                     break;
                 default:
@@ -134,6 +148,73 @@ public:
 
             case COMBAT:
                 combat();
+                status = BAG;
+                break;
+
+            case MEDALS:
+                spirits = http_driver.get_spirits(session_id);
+                maxLevelCount = 0;
+                for (const auto &spirit : spirits)
+                {
+                    if (spirit["spirit_json"]["level"]["level"] == 15)
+                        maxLevelCount++;
+                }
+                fmt::print(fmt::fg(fmt::color::yellow), "===========金牌===========");
+
+                fmt::print(fmt::fg(fmt::color::silver), "===========银牌===========");
+
+                fmt::print(fmt::fg(fmt::color::brown), "===========铜牌===========\n");
+
+                if (spirits.size() >= 10)
+                {
+                    fmt::print(fmt::fg(fmt::color::yellow), "         捕宠高手         ");
+                    fmt::print(fmt::fg(fmt::color::silver), "         捕宠能手         ");
+                    fmt::print(fmt::fg(fmt::color::brown), "         捕宠新手         \n");
+                }
+                else if (spirits.size() >= 5)
+                {
+                    fmt::print(fmt::fg(fmt::color::yellow), "                         ");
+                    fmt::print(fmt::fg(fmt::color::silver), "         捕宠能手         ");
+                    fmt::print(fmt::fg(fmt::color::brown), "         捕宠新手         \n");
+                }
+                else if (spirits.size() >= 3)
+                {
+                    fmt::print(fmt::fg(fmt::color::yellow), "                          ");
+                    fmt::print(fmt::fg(fmt::color::silver), "                          ");
+                    fmt::print(fmt::fg(fmt::color::brown), "         捕宠新手         \n");
+                }
+
+                if (maxLevelCount >= 3)
+                {
+                    fmt::print(fmt::fg(fmt::color::yellow), "         升级大师         ");
+                    fmt::print(fmt::fg(fmt::color::silver), "         升级能手         ");
+                    fmt::print(fmt::fg(fmt::color::brown), "         升级新手         \n");
+                }
+                else if (maxLevelCount >= 1)
+                {
+                    fmt::print(fmt::fg(fmt::color::yellow), "                         ");
+                    fmt::print(fmt::fg(fmt::color::silver), "         升级能手         ");
+                    fmt::print(fmt::fg(fmt::color::brown), "         升级新手         \n");
+                }
+                else
+                {
+                    fmt::print(fmt::fg(fmt::color::yellow), "                          ");
+                    fmt::print(fmt::fg(fmt::color::silver), "                          ");
+                    fmt::print(fmt::fg(fmt::color::brown), "         升级新手         \n");
+                }
+                getchar();
+                status = BAG;
+                break;
+
+            case ONLINE_USERS:
+                online_users();
+                status = BAG;
+                break;
+
+            case WIN_RATE:
+                std::cout << "你的胜率：" << http_driver.get_win_rate(session_id) << "%" << std::endl;
+                std::cout << "按下Enter键回到开始界面\n";
+                getchar();
                 status = BAG;
                 break;
 
@@ -221,6 +302,7 @@ public:
                 {
                     std::cout << "您还没有精灵！，系统随机赠送一个给您，按下Enter继续\n";
                     http_driver.add_random_spirit(session_id);
+                    spirits = http_driver.get_spirits(session_id);
                     getchar();
                 }
                 std::cout << "===========================================\n";
@@ -343,8 +425,7 @@ public:
                 }
                 else if (std::stoi(input) == 2)
                 {
-                    std::cout << "PVP功能暂未开放，按下Enter返回\n";
-                    getchar();
+                    pvp();
                     return;
                 }
                 else
@@ -453,6 +534,7 @@ public:
                     if (winner == 0)
                     {
                         std::cout << "升级赛胜利！，你的精灵获得了50点经验\n";
+                        http_driver.update_win(session_id, true);
                         std::cout << "==================升级前====================\n";
                         std::cout << "     等级：" << my_spirit["level"]["level"] << "\n";
                         std::cout << " 已获得经验：" << my_spirit["level"]["exp"] << "\n";
@@ -486,6 +568,7 @@ public:
                     else
                     {
                         std::cout << "升级赛失败！\n";
+                        http_driver.update_win(session_id, false);
                         std::cout << "按下Enter返回\n";
                         getchar();
                         return;
@@ -496,6 +579,7 @@ public:
                     if (winner == 0)
                     {
                         std::cout << "决斗赛胜利！，你获得了系统精灵" << system_spirit["description"]["petName"] << "\n";
+                        http_driver.update_win(session_id, true);
                         std::cout << "=============获得前================\n";
                         std::cout << "===========================================\n";
                         std::cout << "            我的精灵                    \n";
@@ -527,6 +611,7 @@ public:
                     else if (winner == 1)
                     {
                         std::cout << "决斗赛失败！\n";
+                        http_driver.update_win(session_id, false);
                         std::cout << "请从下列你的精灵中选择一个送出  \n";
                         // 从我的精灵中随机选择3个送出
                         std::cout << "     id   类型   昵称   等级\n";
@@ -572,6 +657,177 @@ public:
                 default:
                     break;
                 }
+            }
+        }
+    }
+
+    void pvp()
+    {
+        std::string input;
+        hv::Json my_spirit;
+        int status = 0;
+        while (true)
+        {
+            std::cout << "\033[2J";   // ANSI转义序列，用于清屏
+            std::cout << "\033[1;1H"; // ANSI转义序列，用于将光标移动到第1行第1列
+            switch (status)
+            {
+            case 0:
+                std::cout << "===========================================\n";
+                std::cout << "            PVP                        \n";
+                std::cout << "===========================================\n";
+                spirits = http_driver.get_spirits(session_id);
+                std::cout << "===========================================\n";
+                std::cout << "            我的精灵                    \n";
+                std::cout << "===========================================\n";
+                std::cout << "     id   类型   昵称   等级\n";
+                for (auto &spirit : spirits)
+                {
+                    std::cout << "     " << spirit["id"] << " " << spirit["spirit_json"]["description"]["name"] << " "
+                              << spirit["spirit_json"]["description"]["petName"] << " " << spirit["spirit_json"]["level"]["level"] << "\n";
+                }
+                std::cout << std::endl;
+                std::cout << "            请选择出战精灵：";
+                getline(std::cin, input);
+                for (auto &spirit : spirits)
+                {
+                    if (spirit["id"] == std::stoi(input))
+                    {
+                        my_spirit = spirit["spirit_json"];
+                        break;
+                    }
+                }
+                std::cout << "按下Enter键加入匹配队列";
+                std::cout << session_id << std::endl;
+                std::cout << std::stoi(input) << std::endl;
+                http_driver.join_match(session_id, std::stoi(input));
+                status = 1;
+                break;
+
+            case 1:
+                std::cout << "等待匹配中...\n";
+                while (true)
+                {
+                    std::pair<bool, hv::Json> match = http_driver.get_match(session_id);
+                    if (match.first)
+                    {
+                        std::cout << "匹配成功！\n";
+                        std::cout << "对手用户名：" << match.second["enemy"] << "\n";
+                        std::cout << "对手精灵信息：\n";
+                        std::cout << "     类型：" << match.second["enemy_spirit"]["description"]["name"] << "\n";
+                        std::cout << "     昵称：" << match.second["enemy_spirit"]["description"]["petName"] << "\n";
+                        std::cout << "     等级：" << match.second["enemy_spirit"]["level"]["level"] << "\n";
+                        std::cout << "     生命：" << match.second["enemy_spirit"]["property"]["hp"] << "\n";
+                        std::cout << "     攻击：" << match.second["enemy_spirit"]["property"]["attackPower"] << "\n";
+                        std::cout << "     防御：" << match.second["enemy_spirit"]["property"]["defensePower"] << "\n";
+                        std::cout << "     速度：" << match.second["enemy_spirit"]["property"]["speed"] << "\n";
+                        std::cout << "按下Enter开始战斗\n";
+                        getchar();
+                        for (auto &round : match.second["result"]["round"])
+                        {
+                            std::cout << "\033[2J";   // ANSI转义序列，用于清屏
+                            std::cout << "\033[1;1H"; // ANSI转义序列，用于将光标移动到第1行第1列
+                            std::cout << "昵称：" << my_spirit["description"]["petName"] << "         昵称" << match.second["enemy_spirit"]["description"]["petName"] << "\n";
+                            std::cout << "类型：" << my_spirit["description"]["name"] << "         类型" << match.second["enemy_spirit"]["description"]["name"] << "\n";
+                            std::cout << "等级：" << my_spirit["level"]["level"] << "         等级" << match.second["enemy_spirit"]["level"]["level"] << "\n";
+                            std::cout << "生命：" << round["property"][0]["hp"] << "         生命" << round["property"][1]["hp"] << "\n";
+                            std::cout << "攻击：" << round["property"][0]["attackPower"] << "         攻击" << round["property"][1]["attackPower"] << "\n";
+                            std::cout << "防御：" << round["property"][0]["defensePower"] << "         防御" << round["property"][1]["defensePower"] << "\n";
+                            std::cout << "速度：" << round["property"][0]["speed"] << "         速度" << round["property"][1]["speed"] << "\n";
+                            std::cout << "===========================================\n";
+                            std::cout << round["attack"] << "\n";
+                            std::cout << "===========================================\n";
+                            for (auto &result : round["result"])
+                            {
+                                std::cout << result << "\n";
+                            }
+                            std::cout << "===========================================\n";
+                            std::cout << "按下Enter继续\n";
+                            getchar();
+                        }
+                        std::cout << match.second["result"]["fighter"][static_cast<int>(match.second["result"]["winner"])] << "获胜！\n";
+                        std::cout << "按下Enter返回\n";
+                        getchar();
+                        return;
+                        break;
+                    }
+                    else
+                    {
+                        sleep(1);
+                    }
+                }
+                break;
+
+            default:
+                break;
+            }
+        }
+    }
+
+    void online_users()
+    {
+        hv::Json users = http_driver.get_all_user(session_id);
+        int status = 0;
+        int id = 0;
+        std::string input;
+        while (true)
+        {
+            std::cout << "\033[2J";   // ANSI转义序列，用于清屏
+            std::cout << "\033[1;1H"; // ANSI转义序列，用于将光标移动到第1行第1列
+            switch (status)
+            {
+            case 0:
+                std::cout << "===========================================\n";
+                std::cout << "            在线用户                    \n";
+                std::cout << "===========================================\n";
+                std::cout << "    序号    用户名   精灵数量   是否在线\n";
+                for (auto &user : users)
+                {
+                    std::cout << "    " << user["id"] << "    " << user["username"] << "    " << user["spirits"].size() << "    " << user["online"] << "\n";
+                }
+                std::cout << "       1.查看用户详情\n";
+                std::cout << "       2.返回\n";
+                std::cout << "===========================================\n";
+                std::cout << "请选择：";
+                getline(std::cin, input);
+                if (std::stoi(input) == 1)
+                {
+                    std::cout << "请输入序号：";
+                    getline(std::cin, input);
+                    id = std::stoi(input);
+                    status = 1;
+                }
+                else
+                {
+                    return;
+                }
+                break;
+            case 1:
+                std::cout << "===========================================\n";
+                std::cout << "            用户详情                    \n";
+                std::cout << "===========================================\n";
+                for (auto &user : users)
+                {
+                    if (user["id"] == id)
+                    {
+                        std::cout << "    用户名：" << user["username"] << "\n";
+                        std::cout << "    精灵数量：" << user["spirits"].size() << "\n";
+                        std::cout << "    是否在线：" << user["online"] << "\n";
+                        std::cout << "    精灵列表：\n";
+                        for (auto &spirit : user["spirits"])
+                        {
+                            std::cout << "        " << spirit["description"]["name"] << " " << spirit["description"]["petName"] << " " << spirit["level"]["level"] << "\n";
+                            std::cout << "        " << "生命：" << spirit["property"]["hp"] << " 攻击：" << spirit["property"]["attackPower"] << " 防御：" << spirit["property"]["defensePower"] << " 速度：" << spirit["property"]["speed"] << "\n";
+                        }
+                        std::cout << "===========================================\n";
+                        std::cout << "按下Enter返回\n";
+                        getchar();
+                        status = 0;
+                    }
+                }
+                break;
+            default:
+                break;
             }
         }
     }

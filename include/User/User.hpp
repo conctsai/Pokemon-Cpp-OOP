@@ -13,6 +13,7 @@ protected:
 public:
     UserManager() = default;
     bool login(const std::string &, const std::string &) noexcept;
+    UserInterface getUserInterface() { return this->user; };
     void logout() noexcept;
     bool getLoginStatus() const noexcept;
     virtual int registerUser(const std::string &, const std::string &) noexcept;

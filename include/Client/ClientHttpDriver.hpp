@@ -140,5 +140,55 @@ public:
         requests::Response resp = requests::request(req);
         return resp->status_code == 200;
     }
+
+    hv::Json get_all_user(int session_id)
+    {
+        HttpRequestPtr req(new HttpRequest);
+        req->method = HTTP_GET;
+        req->url = this->url + "/all_users";
+        req->body = hv::Json({{"session_id", session_id}}).dump();
+        requests::Response resp = requests::request(req);
+        return hv::Json::parse(resp->body);
+    }
+
+    double get_win_rate(int session_id)
+    {
+        HttpRequestPtr req(new HttpRequest);
+        req->method = HTTP_GET;
+        req->url = this->url + "/get_win";
+        req->body = hv::Json({{"session_id", session_id}}).dump();
+        requests::Response resp = requests::request(req);
+        return hv::Json::parse(resp->body)["win_rate"];
+    }
+
+    bool update_win(int session_id, bool is_win)
+    {
+        HttpRequestPtr req(new HttpRequest);
+        req->method = HTTP_POST;
+        req->url = this->url + "/update_win";
+        req->body = hv::Json({{"session_id", session_id}, {"win", is_win}}).dump();
+        requests::Response resp = requests::request(req);
+        return resp->status_code == 200;
+    }
+
+    bool join_match(int session_id, int spirit_id)
+    {
+        HttpRequestPtr req(new HttpRequest);
+        req->method = HTTP_POST;
+        req->url = this->url + "/join_match";
+        req->body = hv::Json({{"session_id", session_id}, {"spirit_id", spirit_id}}).dump();
+        requests::Response resp = requests::request(req);
+        return resp->status_code == 200;
+    }
+
+    std::pair<bool, hv::Json> get_match(int session_id)
+    {
+        HttpRequestPtr req(new HttpRequest);
+        req->method = HTTP_GET;
+        req->url = this->url + "/get_match";
+        req->body = hv::Json({{"session_id", session_id}}).dump();
+        requests::Response resp = requests::request(req);
+        return std::make_pair<bool, hv::Json>(resp->status_code == 200, hv::Json::parse(resp->body));
+    }
     ~ClientHttpDriver() = default;
 };

@@ -288,7 +288,7 @@ void Combat::handleEffect(Goal now, Source s, Target t, std::string des) noexcep
     if (rd == 1)
     {
         // 未命中
-        tmp["result"].push_back(GET_PET_NAME((now + t.goal) % 2) + " 的 " + des + " 技能未命中！");
+        tmp["result"].push_back(GET_PET_NAME(now) + " 的 " + des + " 技能未命中！，" + GET_PET_NAME((now + t.goal) % 2) + " 未受到任何影响。");
     }
     else if (rd == 2)
     {

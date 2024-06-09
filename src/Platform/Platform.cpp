@@ -50,6 +50,7 @@ int Platform::registerUser(const std::string &username, const std::string &passw
         SPIRITDRIVER.insertSpirit(id, SpiritUtils::getRandomSpirits(1).dump());
         SPIRITDRIVER.insertSpirit(id, SpiritUtils::getRandomSpirits(1).dump());
         SPIRITDRIVER.insertSpirit(id, SpiritUtils::getRandomSpirits(1).dump());
+        WINDRIVER.insertWin(id, 0, 0);
         return 1; // 注册成功，每个用户注册时赠送3个精灵
     }
 }
