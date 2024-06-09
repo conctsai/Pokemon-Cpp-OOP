@@ -1,10 +1,8 @@
-#include "Platform/Platform.hpp"
-#include <iostream>
+#include "Client/Client.hpp"
 
 int main()
 {
-    Platform platform;
-    platform.login("conc", "123456");
-    platform.init();
-    std::cout << platform.getMaxLevel();
+    Client client("http://localhost:8080");
+    client.run();
+    return 0;
 }

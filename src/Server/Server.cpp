@@ -4,7 +4,7 @@ Server::Server(int port)
 {
     router.GET("/create_session", [&](const HttpContextPtr &ctx)
                {
-                   int id = platforms.size();
+                   int id = session_id++;
                    platforms[id] = std::make_unique<Platform>();
                    hv::Json resp;
                    resp["session_id"] = id;
@@ -68,6 +68,50 @@ Server::Server(int port)
                 return ctx->send(resp.dump());
             }
         } });
+
+    router.GET("/logout", [&](const HttpContextPtr &ctx)
+               {
+        hv::Json req = hv::Json::parse(ctx->body());
+        hv::Json resp;
+        int id = req["session_id"];
+        if (platforms.find(id) == platforms.end())
+        {
+            ctx->setStatus(http_status::HTTP_STATUS_NOT_FOUND);
+            resp["msg"] = "Invalid session id";
+        }
+        else
+        {
+            if (!platforms[id]->getLoginStatus())
+            {
+                ctx->setStatus(http_status::HTTP_STATUS_NOT_FOUND);
+                resp["msg"] = "Not logged in";
+            }
+            else
+            {
+                platforms[id]->logout();
+                ctx->setStatus(http_status::HTTP_STATUS_OK);
+                resp["msg"] = "Logout success";
+            }
+        }
+        return ctx->send(resp.dump()); });
+
+    router.POST("/exit", [&](const HttpContextPtr &ctx)
+                {
+        hv::Json req = hv::Json::parse(ctx->body());
+        hv::Json resp;
+        int id = req["session_id"];
+        if (platforms.find(id) == platforms.end())
+        {
+            ctx->setStatus(http_status::HTTP_STATUS_NOT_FOUND);
+            resp["msg"] = "Invalid session id";
+        }
+        else
+        {
+            platforms.erase(id);
+            ctx->setStatus(http_status::HTTP_STATUS_OK);
+            resp["msg"] = "Exit success";
+        }
+        return ctx->send(resp.dump()); });
 
     router.GET("/spirits/get", [&](const HttpContextPtr &ctx)
                {
@@ -147,6 +191,72 @@ Server::Server(int port)
                 {
                     ctx->setStatus(http_status::HTTP_STATUS_NOT_FOUND);
                     resp["msg"] = "Delete failed";
+                }
+            }
+        }
+        return ctx->send(resp.dump()); });
+
+    router.POST("/spirits/rename", [&](const HttpContextPtr &ctx)
+                {
+        hv::Json req = hv::Json::parse(ctx->body());
+        hv::Json resp;
+        int id = req["session_id"];
+        if (platforms.find(id) == platforms.end())
+        {
+            ctx->setStatus(http_status::HTTP_STATUS_NOT_FOUND);
+            resp["msg"] = "Invalid session id";
+        }
+        else
+        {
+            if (!platforms[id]->getLoginStatus())
+            {
+                ctx->setStatus(http_status::HTTP_STATUS_NOT_FOUND);
+                resp["msg"] = "Not logged in";
+            }
+            else
+            {
+                if (platforms[id]->renameSpirit(req["spirit_id"], req["new_name"]))
+                {
+                    ctx->setStatus(http_status::HTTP_STATUS_OK);
+                    resp["msg"] = "Rename success";
+                }
+                else
+                {
+                    ctx->setStatus(http_status::HTTP_STATUS_NOT_FOUND);
+                    resp["msg"] = "Rename failed";
+                }
+            }
+        }
+        return ctx->send(resp.dump()); });
+
+    router.POST("/spirits/level_up", [&](const HttpContextPtr &ctx)
+                {
+        hv::Json req = hv::Json::parse(ctx->body());
+        hv::Json resp;
+        int id = req["session_id"];
+        if (platforms.find(id) == platforms.end())
+        {
+            ctx->setStatus(http_status::HTTP_STATUS_NOT_FOUND);
+            resp["msg"] = "Invalid session id";
+        }
+        else
+        {
+            if (!platforms[id]->getLoginStatus())
+            {
+                ctx->setStatus(http_status::HTTP_STATUS_NOT_FOUND);
+                resp["msg"] = "Not logged in";
+            }
+            else
+            {
+                if (platforms[id]->updateSpirit(req["spirit_id"], req["exp"]))
+                {
+                    ctx->setStatus(http_status::HTTP_STATUS_OK);
+                    resp["msg"] = "Level up success";
+                }
+                else
+                {
+                    ctx->setStatus(http_status::HTTP_STATUS_NOT_FOUND);
+                    resp["msg"] = "Level up failed";
                 }
             }
         }

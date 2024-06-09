@@ -11,6 +11,7 @@ private:
     std::map<int, std::unique_ptr<Platform>> platforms;
     HttpService router;
     http_server_t server;
+    int session_id = 0;
 
 public:
     Server(int port);
