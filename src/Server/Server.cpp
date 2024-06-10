@@ -4,10 +4,12 @@ Server::Server(int port)
 {
     router.GET("/create_session", [&](const HttpContextPtr &ctx)
                {
+                   mtx.lock();
                    int id = session_id++;
                    platforms[id] = std::make_unique<Platform>();
                    hv::Json resp;
                    resp["session_id"] = id;
+                   mtx.unlock();
                    return ctx->send(resp.dump()); });
 
     router.POST("/login", [&](const HttpContextPtr &ctx)
@@ -25,6 +27,17 @@ Server::Server(int port)
         }
         else
         {
+            // 判断用户是否已在其他客户端登录
+            for (const auto &pair : platforms)
+            {
+                if (pair.second->getUserInterface().username == username)
+                {
+                    ctx->setStatus(http_status::HTTP_STATUS_NOT_FOUND);
+                    resp["msg"] = "User already logged in";
+                    return ctx->send(resp.dump());
+                }
+            }
+
             if (platforms[id]->login(username, password))
             {
                 platforms[id]->init();
@@ -494,6 +507,7 @@ Server::Server(int port)
                 resp["enemy"] = platforms[m.enemy_session_id]->getUserInterface().username;
                 resp["enemy_spirit"] = matching_queue.front().spirit;
                 resp["result"] = m.result;
+                matching_queue.front().spirit = m.spirit;
             }
             else if (matching_queue.front().session_id == id && matching_queue.front().is_match == true)
             {
@@ -518,5 +532,6 @@ Server::Server(int port)
 
 void Server::run()
 {
+    server.worker_threads = 4;
     http_server_run(&server);
 }

@@ -6,6 +6,7 @@
 #include <memory>
 #include <queue>
 #include <iostream>
+#include <mutex>
 
 struct match
 {
@@ -20,6 +21,7 @@ class Server
 {
 private:
     std::map<int, std::unique_ptr<Platform>> platforms;
+    std::mutex mtx;
     HttpService router;
     http_server_t server;
     int session_id = 0;

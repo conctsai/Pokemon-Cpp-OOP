@@ -49,8 +49,8 @@ public:
         int maxLevelCount = 0;
         while (true)
         {
-            std::cout << "\033[2J";   // ANSI转义序列，用于清屏
-            std::cout << "\033[1;1H"; // ANSI转义序列，用于将光标移动到第1行第1列
+            std::cout << "\033[2J";
+            std::cout << "\033[1;1H";
             switch (status)
             {
             case CREATE_SESSION:
@@ -60,25 +60,24 @@ public:
 
             case START:
                 std::cout << "===========================================\n";
-                std::cout << "         欢迎来到宠物小精灵世界！          \n";
+                fmt::print(fmt::fg(fmt::color::purple), "         欢迎来到宠物小精灵世界！          \n");
                 std::cout << "===========================================\n";
-                std::cout << "            姓名：" << "蔡正舟" << "\n";
-                std::cout << "            学号：" << "2022212010" << "\n";
+                fmt::print(fmt::fg(fmt::color::purple), "            姓名： 蔡正舟\n");
+                fmt::print(fmt::fg(fmt::color::purple), "            学号： 2022212010\n");
                 std::cout << "===========================================\n";
-                std::cout << "            按下Enter键继续...            \n";
+                fmt::print(fmt::fg(fmt::color::purple), "            按下Enter键继续...            \n");
                 getchar();
                 status = MAIN;
                 break;
 
             case MAIN:
                 std::cout << "===========================================\n";
-                std::cout << "            1. 登录                        \n";
-                std::cout << "            2. 注册                        \n";
-                std::cout << "            3. 退出                        \n";
+                fmt::print(fmt::fg(fmt::color::purple), "                 1. 登录                   \n");
+                fmt::print(fmt::fg(fmt::color::purple), "                 2. 注册                   \n");
+                fmt::print(fmt::fg(fmt::color::purple), "                 3. 退出                   \n");
                 std::cout << "===========================================\n";
-                std::cout << "            请选择：";
-                getline(std::cin, input);
-                switch (std::stoi(input))
+                std::cout << "               请选择：";
+                switch (getnum(1, 3))
                 {
                 case 1:
                     status = LOGIN;
@@ -107,16 +106,15 @@ public:
 
             case BAG:
                 std::cout << "===========================================\n";
-                std::cout << "            1. 我的精灵                    \n";
-                std::cout << "            2. 战斗                        \n";
-                std::cout << "            3. 在线用户                    \n";
-                std::cout << "            4. 查看胜率                    \n";
-                std::cout << "            5. 查看徽章                    \n";
-                std::cout << "            6. 退出登录                    \n";
+                fmt::print(fmt::fg(fmt::color::purple), "            1. 我的精灵                    \n");
+                fmt::print(fmt::fg(fmt::color::purple), "            2. 战斗                        \n");
+                fmt::print(fmt::fg(fmt::color::purple), "            3. 在线用户                    \n");
+                fmt::print(fmt::fg(fmt::color::purple), "            4. 查看胜率                    \n");
+                fmt::print(fmt::fg(fmt::color::purple), "            5. 查看徽章                    \n");
+                fmt::print(fmt::fg(fmt::color::purple), "            6. 退出登录                    \n");
                 std::cout << "===========================================\n";
                 std::cout << "            请选择：";
-                getline(std::cin, input);
-                switch (std::stoi(input))
+                switch (getnum(1, 6))
                 {
                 case 1:
                     status = MY_SPIRITS;
@@ -248,11 +246,11 @@ public:
     {
         std::string username, password;
         std::cout << "===========================================\n";
-        std::cout << "            登录                        \n";
+        fmt::print(fmt::fg(fmt::color::purple), "                  登录                     \n");
         std::cout << "===========================================\n";
-        std::cout << "            用户名：";
+        std::cout << "          用户名：";
         getline(std::cin, username);
-        std::cout << "            密码：";
+        std::cout << "          密码：";
         getline(std::cin, password);
         if (http_driver.login(username, password, session_id))
         {
@@ -270,7 +268,7 @@ public:
     {
         std::string username, password;
         std::cout << "===========================================\n";
-        std::cout << "            注册                        \n";
+        fmt::print(fmt::fg(fmt::color::purple), "                 注册                 \n");
         std::cout << "===========================================\n";
         std::cout << "            用户名：";
         getline(std::cin, username);
@@ -292,8 +290,8 @@ public:
         std::string input;
         while (true)
         {
-            std::cout << "\033[2J";   // ANSI转义序列，用于清屏
-            std::cout << "\033[1;1H"; // ANSI转义序列，用于将光标移动到第1行第1列
+            std::cout << "\033[2J";
+            std::cout << "\033[1;1H";
             switch (status)
             {
             case 0:
@@ -306,21 +304,21 @@ public:
                     getchar();
                 }
                 std::cout << "===========================================\n";
-                std::cout << "            我的精灵                    \n";
+                fmt::print(fmt::fg(fmt::color::purple), "                 我的精灵                 \n");
                 std::cout << "===========================================\n";
-                std::cout << "     id   类型   昵称   等级\n";
+                fmt::print(fmt::fg(fmt::color::red), "     id      类型      昵称      等级\n");
                 for (auto &spirit : spirits)
                 {
-                    std::cout << "     " << spirit["id"] << " " << spirit["spirit_json"]["description"]["name"] << " "
-                              << spirit["spirit_json"]["description"]["petName"] << " " << spirit["spirit_json"]["level"]["level"] << "\n";
+                    std::cout << "     " << spirit["id"] << "    " << spirit["spirit_json"]["description"]["name"] << "    "
+                              << spirit["spirit_json"]["description"]["petName"] << "      " << spirit["spirit_json"]["level"]["level"] << "\n";
                 }
                 std::cout << std::endl;
-                std::cout << "            1. 查看精灵详情               \n";
-                std::cout << "            2. 返回主界面                 \n";
+                std::cout << "===========================================\n";
+                fmt::print(fmt::fg(fmt::color::purple), "            1. 查看精灵详情               \n");
+                fmt::print(fmt::fg(fmt::color::purple), "            2. 返回主界面                 \n");
                 std::cout << "===========================================\n";
                 std::cout << "            请选择：";
-                getline(std::cin, input);
-                if (std::stoi(input) == 1)
+                if (getnum(1, 2) == 1)
                 {
                     std::cout << "请输入精灵id：";
                     getline(std::cin, input);
@@ -337,32 +335,31 @@ public:
                     if (spirit["id"] == std::stoi(input))
                     {
                         std::cout << "===========================================\n";
-                        std::cout << "            精灵详情                    \n";
-                        std::cout << "==================描述=====================\n";
+                        fmt::print(fmt::fg(fmt::color::purple), "                 精灵详情                 \n");
+                        fmt::print(fmt::fg(fmt::color::yellow), "==================描述=====================\n");
                         std::cout << "     id：" << spirit["id"] << "\n";
                         std::cout << "     类型：" << spirit["spirit_json"]["description"]["name"] << "\n";
                         std::cout << "     昵称：" << spirit["spirit_json"]["description"]["petName"] << "\n";
                         std::cout << "     描述：" << spirit["spirit_json"]["description"]["description"] << "\n";
-                        std::cout << "==================等级=====================\n";
+                        fmt::print(fmt::fg(fmt::color::yellow), "==================等级=====================\n");
                         std::cout << "     等级：" << spirit["spirit_json"]["level"]["level"] << "\n";
                         std::cout << " 已获得经验：" << spirit["spirit_json"]["level"]["exp"] << "\n";
                         std::cout << "  升级进程：" << spirit["spirit_json"]["level"]["progress"] << "%\n";
-                        std::cout << "==================属性=====================\n";
-                        std::cout << "     生命：" << spirit["spirit_json"]["property"]["hp"] << "\n";
-                        std::cout << "     攻击：" << spirit["spirit_json"]["property"]["attackPower"] << "\n";
-                        std::cout << "     防御：" << spirit["spirit_json"]["property"]["defensePower"] << "\n";
-                        std::cout << "     速度：" << spirit["spirit_json"]["property"]["speed"] << "\n";
-                        std::cout << "==================技能=====================\n";
-                        std::cout << "  普通攻击：" << spirit["spirit_json"]["skills"]["basicSkill"]["description"] << "\n";
-                        std::cout << "  特殊技能：" << spirit["spirit_json"]["skills"]["specialSkill"]["description"] << "\n";
-                        std::cout << "  必杀技能：" << spirit["spirit_json"]["skills"]["ultimateSkill"]["description"] << "\n";
+                        fmt::print(fmt::fg(fmt::color::yellow), "==================属性=====================\n");
+                        std::cout << "  生命值：" << spirit["spirit_json"]["property"]["hp"] << "\n";
+                        std::cout << "  攻击力：" << spirit["spirit_json"]["property"]["attackPower"] << "\n";
+                        std::cout << "  防御力：" << spirit["spirit_json"]["property"]["defensePower"] << "\n";
+                        std::cout << "  速度：" << spirit["spirit_json"]["property"]["speed"] << "\n";
+                        fmt::print(fmt::fg(fmt::color::yellow), "==================技能=====================\n");
+                        fmt::print(fmt::fg(fmt::color::red), "普通攻击：{}\n", spirit["spirit_json"]["skills"]["basicSkill"]["description"]);
+                        fmt::print(fmt::fg(fmt::color::red), "特殊技能：{}\n", spirit["spirit_json"]["skills"]["specialSkill"]["description"]);
+                        fmt::print(fmt::fg(fmt::color::red), "必杀技能：{}\n", spirit["spirit_json"]["skills"]["ultimateSkill"]["description"]);
                         std::cout << "===========================================\n";
-                        std::cout << "            1. 返回上一级                 \n";
-                        std::cout << "            2. 更改昵称                 \n";
+                        fmt::print(fmt::fg(fmt::color::purple), "            1. 返回上一级                 \n");
+                        fmt::print(fmt::fg(fmt::color::purple), "            2. 更改昵称                   \n");
                         std::cout << "===========================================\n";
                         std::cout << "            请选择：";
-                        getline(std::cin, input);
-                        if (std::stoi(input) == 1)
+                        if (getnum(1, 2) == 1)
                         {
                             status = 0;
                         }
@@ -400,27 +397,28 @@ public:
 
         while (true)
         {
-            std::cout << "\033[2J";   // ANSI转义序列，用于清屏
-            std::cout << "\033[1;1H"; // ANSI转义序列，用于将光标移动到第1行第1列
+            std::cout << "\033[2J";
+            std::cout << "\033[1;1H";
             switch (status)
             {
             case MODE:
                 std::cout << "===========================================\n";
-                std::cout << "            战斗模式                        \n";
+                fmt::print(fmt::fg(fmt::color::purple), "                 战斗模式                 \n");
                 std::cout << "===========================================\n";
-                std::cout << "            1. PVE                        \n";
-                std::cout << "            2. PVP                        \n";
-                std::cout << "            3. 返回                        \n";
+                fmt::print(fmt::fg(fmt::color::purple), "            1. PVE                        \n");
+                fmt::print(fmt::fg(fmt::color::purple), "            2. PVP                        \n");
+                fmt::print(fmt::fg(fmt::color::purple), "            3. 返回                        \n");
                 std::cout << "===========================================\n";
                 std::cout << "            请选择：";
-                getline(std::cin, input);
+                input = std::to_string(getnum(1, 3));
                 if (std::stoi(input) == 1)
                 {
-                    std::cout << "     1.升级赛                   \n";
-                    std::cout << "     2.决斗赛                   \n";
+                    std::cout << "===========================================\n";
+                    fmt::print(fmt::fg(fmt::color::purple), "                 1.升级赛                 \n");
+                    fmt::print(fmt::fg(fmt::color::purple), "                 2.决斗赛                 \n");
+                    std::cout << "===========================================\n";
                     std::cout << "            请选择：";
-                    getline(std::cin, input);
-                    pve_type = std::stoi(input);
+                    pve_type = getnum(1, 2);
                     status = SELECT;
                 }
                 else if (std::stoi(input) == 2)
@@ -435,11 +433,11 @@ public:
                 break;
             case SELECT:
                 std::cout << "===========================================\n";
-                std::cout << "            PVE                        \n";
+                std::cout << "                PVE                        \n";
                 std::cout << "===========================================\n";
                 spirits = http_driver.get_spirits(session_id);
                 std::cout << "===========================================\n";
-                std::cout << "            我的精灵                    \n";
+                std::cout << "               我的精灵                    \n";
                 std::cout << "===========================================\n";
                 std::cout << "     id   类型   昵称   等级\n";
                 for (auto &spirit : spirits)
@@ -831,5 +829,31 @@ public:
             }
         }
     }
+
+    int getnum(int min, int max)
+    {
+        std::string input;
+        while (true)
+        {
+            getline(std::cin, input);
+            try
+            {
+                int num = std::stoi(input);
+                if (num >= min && num <= max)
+                {
+                    return num;
+                }
+                else
+                {
+                    std::cout << "输入错误，请重新输入：";
+                }
+            }
+            catch (std::exception &e)
+            {
+                std::cout << "输入错误，请重新输入：";
+            }
+        }
+    }
+
     ~Client() = default;
 };
